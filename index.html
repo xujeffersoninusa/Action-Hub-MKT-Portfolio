@@ -149,6 +149,8 @@ html,body{margin:0;padding:0;font-family:'Segoe UI',system-ui,Arial,sans-serif;c
 .act-item.atrisk{border-left-color:var(--amber);}
 .act-item.done{border-left-color:var(--green);}
 .act-title{font-size:13px;font-weight:600;margin-bottom:3px;}
+.act-link{color:var(--ink);text-decoration:none;font-weight:600;border-bottom:1px dashed rgba(255,255,255,.2);transition:color .13s,border-color .13s;}
+.act-link:hover{color:var(--accent);border-bottom-color:var(--accent);}
 .act-meta{font-size:11px;color:var(--muted);}
 .pill{display:inline-flex;align-items:center;padding:2px 8px;border-radius:999px;font-size:10px;font-weight:700;border:1px solid transparent;}
 .pill-red{background:var(--red-s);color:var(--red);border-color:rgba(248,113,113,.3);}
@@ -520,10 +522,14 @@ function renderStatus(){
 function renderAttention(){
   const overdue=portfolio.all.filter(r=>r.status==='Overdue').sort((a,b)=>{if(!a.due)return 1;if(!b.due)return-1;return new Date(a.due)-new Date(b.due);}).slice(0,8);
   const urgent=portfolio.all.filter(r=>isUrgent(r)&&!isDone(r)).sort((a,b)=>{if(!a.due)return 1;if(!b.due)return-1;return new Date(a.due)-new Date(b.due);}).slice(0,8);
+  const hubUrls={
+    uled:'https://xujeffersoninusa.github.io/Action-Hub/?access=jeffersonxuinteradyne',
+    is:'https://xujeffersoninusa.github.io/IS-Hub/?access=imgsensorteradyne2026',
+  };
   const hubLabel=r=>`<span class="pill ${r._hub==='uled'?'pill-blue':'pill-violet'}">${r._hub==='uled'?'uLED':'IS'}</span>`;
   const card=(items,emptyMsg)=>items.length?items.map(r=>`
     <div class="act-item ${r.status.toLowerCase().replace(/ /g,'')}">
-      <div class="act-title">${hubLabel(r)} ${esc(r.title)}</div>
+      <div class="act-title">${hubLabel(r)} <a class="act-link" href="${hubUrls[r._hub]}&openAction=${encodeURIComponent(r.id)}" target="_blank">${esc(r.title)}</a></div>
       <div class="act-meta">${esc(r.account)} · ${esc(r.owner||'Unassigned')} · Due: ${fmtDate(r.due)}</div>
     </div>`).join(''):`<div style="color:var(--muted);font-size:13px;text-align:center;padding:16px;">${emptyMsg}</div>`;
   document.getElementById('overdueList').innerHTML=card(overdue,'No overdue actions ✓');
