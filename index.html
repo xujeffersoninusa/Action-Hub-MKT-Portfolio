@@ -45,6 +45,13 @@ html,body{margin:0;padding:0;font-family:'Segoe UI',system-ui,Arial,sans-serif;c
 .brand h1{margin:0;font-size:17px;font-weight:800;letter-spacing:-.02em;}
 .port-badge{font-size:11px;font-weight:700;background:linear-gradient(135deg,var(--uled-s),var(--is-s));color:var(--violet);border:1px solid rgba(167,139,250,.3);border-radius:6px;padding:3px 10px;}
 .topbar-right{display:flex;align-items:center;gap:10px;}
+.hub-tabs{display:flex;align-items:center;gap:4px;background:var(--surface2);border:1px solid var(--line);border-radius:10px;padding:4px;}
+.hub-tab{display:inline-flex;align-items:center;gap:6px;padding:6px 14px;border-radius:7px;font-size:12px;font-weight:700;cursor:pointer;text-decoration:none;color:var(--muted);transition:all .15s;white-space:nowrap;}
+.hub-tab:hover{background:var(--surface);color:var(--ink);}
+.hub-tab.active{background:var(--surface);color:var(--ink);box-shadow:0 1px 4px rgba(0,0,0,.3);}
+.hub-tab.uled-tab:hover,.hub-tab.uled-tab.active{color:var(--uled);}
+.hub-tab.is-tab:hover,.hub-tab.is-tab.active{color:var(--is);}
+
 .last-refresh{font-size:11px;color:var(--muted);}
 .conn-all{display:flex;gap:6px;}
 .hub-conn{display:inline-flex;align-items:center;gap:4px;font-size:11px;font-weight:700;border-radius:6px;padding:3px 9px;}
@@ -222,6 +229,12 @@ button{appearance:none;border:none;cursor:pointer;border-radius:8px;padding:7px 
     <div style="width:1px;height:24px;background:var(--line);margin:0 4px;"></div>
     <h1>ActionHub Portfolio</h1>
     <span class="port-badge">Landscape View</span>
+  </div>
+  <!-- Hub navigation tabs -->
+  <div class="hub-tabs">
+    <span class="hub-tab active">📊 Portfolio</span>
+    <a class="hub-tab uled-tab" href="https://xujeffersoninusa.github.io/uLED/?access=jeffersonxuinteradyne" target="_blank">🔵 uLED Hub</a>
+    <a class="hub-tab is-tab"   href="https://xujeffersoninusa.github.io/ImageSensor/?access=imgsensorteradyne2026" target="_blank">🟣 Image Sensor Hub</a>
   </div>
   <div class="topbar-right">
     <span class="last-refresh" id="lastRefresh">—</span>
