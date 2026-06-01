@@ -252,7 +252,7 @@ button{appearance:none;border:none;cursor:pointer;border-radius:8px;padding:7px 
     <div class="hub-card">
       <div class="hub-card-head">
         <span class="hub-name uled">🔵 uLED Hub</span>
-        <a href="https://xujeffersoninusa.github.io/Action-Hub/?access=jeffersonxuinteradyne" target="_blank" style="font-size:11px;color:var(--accent);text-decoration:none;">Open Hub →</a>
+        <a href="https://xujeffersoninusa.github.io/uLED/?access=jeffersonxuinteradyne" target="_blank" style="font-size:11px;color:var(--accent);text-decoration:none;">Open Hub →</a>
       </div>
       <div class="hub-stats" id="uledStats">
         <div class="hub-stat"><div class="sv" style="color:var(--accent)" id="us-total">0</div><div class="sl">Total</div></div>
@@ -264,7 +264,7 @@ button{appearance:none;border:none;cursor:pointer;border-radius:8px;padding:7px 
     <div class="hub-card">
       <div class="hub-card-head">
         <span class="hub-name is">🟣 Image Sensor Hub</span>
-        <a href="https://xujeffersoninusa.github.io/IS-Hub/?access=imgsensorteradyne2026" target="_blank" style="font-size:11px;color:var(--is);text-decoration:none;">Open Hub →</a>
+        <a href="https://xujeffersoninusa.github.io/ImageSensor/?access=imgsensorteradyne2026" target="_blank" style="font-size:11px;color:var(--is);text-decoration:none;">Open Hub →</a>
       </div>
       <div class="hub-stats">
         <div class="hub-stat"><div class="sv" style="color:var(--is)"    id="is-total">0</div><div class="sl">Total</div></div>
@@ -523,8 +523,8 @@ function renderAttention(){
   const overdue=portfolio.all.filter(r=>r.status==='Overdue').sort((a,b)=>{if(!a.due)return 1;if(!b.due)return-1;return new Date(a.due)-new Date(b.due);}).slice(0,8);
   const urgent=portfolio.all.filter(r=>isUrgent(r)&&!isDone(r)).sort((a,b)=>{if(!a.due)return 1;if(!b.due)return-1;return new Date(a.due)-new Date(b.due);}).slice(0,8);
   const hubUrls={
-    uled:'https://xujeffersoninusa.github.io/Action-Hub/?access=jeffersonxuinteradyne',
-    is:'https://xujeffersoninusa.github.io/IS-Hub/?access=imgsensorteradyne2026',
+    uled:'https://xujeffersoninusa.github.io/uLED/?access=jeffersonxuinteradyne',
+    is:'https://xujeffersoninusa.github.io/ImageSensor/?access=imgsensorteradyne2026',
   };
   const hubLabel=r=>`<span class="pill ${r._hub==='uled'?'pill-blue':'pill-violet'}">${r._hub==='uled'?'uLED':'IS'}</span>`;
   const card=(items,emptyMsg)=>items.length?items.map(r=>`
