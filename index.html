@@ -367,6 +367,12 @@ const CONFIG={
   ]
 };
 
+// Load credentials from Agent Studio localStorage
+(()=>{try{const s=JSON.parse(localStorage.getItem('agentStudioConfig')||'{}');
+if(s.claudeKey)  CONFIG.claudeKey  = s.claudeKey;
+if(s.proxyUrl)   CONFIG.proxyUrl   = s.proxyUrl;
+}catch(e){}})();
+
 // ── Supabase fetch ──
 async function fetchHub(hub){
   const h={'Content-Type':'application/json','apikey':CONFIG.supabaseKey,'Authorization':`Bearer ${CONFIG.supabaseKey}`};
@@ -583,9 +589,11 @@ async function sendAI(){
   portfolio.aiHistory.push({role:'user',content:msg});
   if(portfolio.aiHistory.length>20)portfolio.aiHistory=portfolio.aiHistory.slice(-20);
   try{
-    const apiUrl=CONFIG.proxyUrl||'https://api.anthropic.com/v1/messages';
+    const apiUrl=CONFIG.proxyUrl||'https://api.anthropic.com/v1/messages';    
+    // FIXED — add apiKey wrapper for proxy
     const apiHeaders=CONFIG.proxyUrl?{'Content-Type':'application/json'}:{'Content-Type':'application/json','x-api-key':CONFIG.claudeKey,'anthropic-version':'2023-06-01','anthropic-dangerous-allow-browser':'true'};
-    const resp=await fetch(apiUrl,{method:'POST',headers:apiHeaders,body:JSON.stringify({model:'claude-sonnet-4-5',max_tokens:1500,system:`You are the Portfolio AI agent for ActionHub OS at Teradyne. You have live access to data from ALL hubs: uLED Hub (customer actions for uLED products) and Image Sensor Hub (IS1/IS2/IS3 actions for PM, Engineering, and Sales). Provide cross-team insights, executive-level summaries, and risk analysis. Be concise and actionable. Today: ${new Date().toLocaleDateString('en-US',{weekday:'long',year:'numeric',month:'long',day:'numeric'})}.\n\nLive portfolio data:\n${dataCtx}`,messages:portfolio.aiHistory})});
+    const apiBody=m=>CONFIG.proxyUrl?{...m,apiKey:CONFIG.claudeKey}:m;
+    const resp=await fetch(apiUrl,{method:'POST',headers:apiHeaders,body:JSON.stringify(apiBody({model:'claude-sonnet-4-5',max_tokens:1500,system:...,messages:portfolio.aiHistory}))});
     if(!resp.ok){const e=await resp.json().catch(()=>({}));throw new Error(e.error?.message||`API ${resp.status}`);}
     const data=await resp.json();const answer=data.content?.find(b=>b.type==='text')?.text||'No response.';
     portfolio.aiHistory.push({role:'assistant',content:answer});
@@ -593,7 +601,6 @@ async function sendAI(){
   }catch(e){loadEl.className='ai-msg error';loadEl.textContent='❌ '+e.message;console.error(e);}
   finally{portfolio.aiThinking=false;document.getElementById('aiSendBtn').disabled=false;}
 }
-
 document.getElementById('btnReload').onclick=loadAll;
 document.getElementById('btnAiToggle').onclick=toggleAI;
 document.addEventListener('keydown',e=>{if(e.key==='Escape')document.getElementById('aiPanel').classList.remove('open');});
