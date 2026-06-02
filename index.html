@@ -231,20 +231,10 @@ button{appearance:none;border:none;cursor:pointer;border-radius:8px;padding:7px 
     <span class="port-badge">Landscape View</span>
   </div>
   <!-- Hub navigation tabs -->
-  <div class="hub-tabs">
-    <span class="hub-tab active">📊 Portfolio</span>
-    <a class="hub-tab" href="https://xujeffersoninusa.github.io/memory-hbm4-hub/?access=memory%2Bteradyne%2B2026" target="_blank">Memory</a>
-    <a class="hub-tab" href="https://xujeffersoninusa.github.io/test-cto-escalations-hub/?access=computertestdivision%2Bteradyne%2B2026" target="_blank">Test</a>
-    <a class="hub-tab" href="https://xujeffersoninusa.github.io/digital-instrument-hub/?access=computertestdivision+teradyne+2026" target="_blank">Digital Instrument</a>
-    <a class="hub-tab uled-tab" href="https://xujeffersoninusa.github.io/uLED/?access=jeffersonxuinteradyne" target="_blank">🔵 uLED Hub</a>
-    <a class="hub-tab is-tab"   href="https://xujeffersoninusa.github.io/ImageSensor/?access=imgsensorteradyne2026" target="_blank">🟣 Image Sensor Hub</a>
-  </div>
+  <div class="hub-tabs" id="hubNavTabs"><span class="hub-tab active">📊 Portfolio</span></div>
   <div class="topbar-right">
     <span class="last-refresh" id="lastRefresh">—</span>
-    <div class="conn-all">
-      <span class="hub-conn" id="connUled">uLED Hub</span>
-      <span class="hub-conn" id="connIs">IS Hub</span>
-    </div>
+    <div class="conn-all" id="connAll"></div>
     <button class="btn-ghost" id="btnAiToggle" style="font-size:12px;padding:6px 11px;">🤖 Portfolio AI</button>
     <button class="btn-ghost" id="btnReload"   style="font-size:12px;padding:6px 11px;">↺ Refresh</button>
   </div>
@@ -259,37 +249,11 @@ button{appearance:none;border:none;cursor:pointer;border-radius:8px;padding:7px 
     <div class="kpi-card c-late"><div class="kpi-val" id="pLate">0</div><div class="kpi-lbl">Late / Overdue</div><div class="kpi-sub" id="pLateSub">past due date</div></div>
     <div class="kpi-card c-done"><div class="kpi-val" id="pDone">0</div><div class="kpi-lbl">Done</div><div class="kpi-sub" id="pDoneSub">completed</div></div>
     <div class="kpi-card c-owners"><div class="kpi-val" id="pOwners">0</div><div class="kpi-lbl">Unique Owners</div><div class="kpi-sub">across all hubs</div></div>
-    <div class="kpi-card c-uled"><div class="kpi-val" id="pUled">0</div><div class="kpi-lbl">uLED Hub</div><div class="kpi-sub" id="pUledSub">actions</div></div>
-    <div class="kpi-card c-is"><div class="kpi-val" id="pIs">0</div><div class="kpi-lbl">Image Sensor Hub</div><div class="kpi-sub" id="pIsSub">actions</div></div>
+    <div id="hubKpiCards" style="display:contents;"></div>
   </div>
 
   <!-- Hub breakdown -->
-  <div class="hub-row">
-    <div class="hub-card">
-      <div class="hub-card-head">
-        <span class="hub-name uled">🔵 uLED Hub</span>
-        <a href="https://xujeffersoninusa.github.io/uLED/?access=jeffersonxuinteradyne" target="_blank" style="font-size:11px;color:var(--accent);text-decoration:none;">Open Hub →</a>
-      </div>
-      <div class="hub-stats" id="uledStats">
-        <div class="hub-stat"><div class="sv" style="color:var(--accent)" id="us-total">0</div><div class="sl">Total</div></div>
-        <div class="hub-stat"><div class="sv" style="color:var(--red)"    id="us-urgent">0</div><div class="sl">Urgent</div></div>
-        <div class="hub-stat"><div class="sv" style="color:var(--amber)"  id="us-late">0</div><div class="sl">Late</div></div>
-        <div class="hub-stat"><div class="sv" style="color:var(--green)"  id="us-done">0</div><div class="sl">Done</div></div>
-      </div>
-    </div>
-    <div class="hub-card">
-      <div class="hub-card-head">
-        <span class="hub-name is">🟣 Image Sensor Hub</span>
-        <a href="https://xujeffersoninusa.github.io/ImageSensor/?access=imgsensorteradyne2026" target="_blank" style="font-size:11px;color:var(--is);text-decoration:none;">Open Hub →</a>
-      </div>
-      <div class="hub-stats">
-        <div class="hub-stat"><div class="sv" style="color:var(--is)"    id="is-total">0</div><div class="sl">Total</div></div>
-        <div class="hub-stat"><div class="sv" style="color:var(--red)"   id="is-urgent">0</div><div class="sl">Urgent</div></div>
-        <div class="hub-stat"><div class="sv" style="color:var(--amber)" id="is-late">0</div><div class="sl">Late</div></div>
-        <div class="hub-stat"><div class="sv" style="color:var(--green)" id="is-done">0</div><div class="sl">Done</div></div>
-      </div>
-    </div>
-  </div>
+  <div class="hub-row" id="hubBreakdown"></div>
 
   <!-- Risk Heatmap + Owner Workload -->
   <div class="sec-head"><h2>🔥 <span>Risk Heatmap by Account</span></h2></div>
@@ -358,13 +322,7 @@ const CONFIG={
   supabaseKey:'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImNxZ3puZHdpc29udm5sc3hpY21kIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODAxNDQzOTksImV4cCI6MjA5NTcyMDM5OX0.nOCt3ddBWhzXGzqcpVvBvNboBro3xFgmpS7F-ZMHXpE',
   claudeKey:'',
   proxyUrl:'https://rapid-pine-a057.xujefferson.workers.dev',
-  hubs:[
-    {id:'memory-hbm4',name:'Memory',table:'memory_hbm4_actions',token:'memory+teradyne+2026',color:'accent'},
-    {id:'test-cto-escalations',name:'Test',table:'test_cto_escalations_actions',token:'computertestdivision+teradyne+2026',color:'accent'},
-    {id:'digital-instrument',name:'Digital Instrument',table:'digital_instrument_actions',color:'accent'},
-    {id:'uled',   name:'uLED Hub',         table:'uled_actions',      color:'uled'},
-    {id:'is',     name:'Image Sensor Hub',  table:'imgsensor_actions', color:'is'},
-  ]
+  hubs:[]
 };
 
 // Load credentials from Agent Studio localStorage
@@ -411,15 +369,42 @@ const isLate=r=>['Late','Overdue','At Risk'].includes(r.status);
 const isDone=r=>['Done','Closed','Completed'].includes(r.status);
 
 // ── Load all hubs ──
+
+async function loadRegistry(){
+  var h={'Content-Type':'application/json','apikey':CONFIG.supabaseKey,'Authorization':'Bearer '+CONFIG.supabaseKey};
+  try{
+    var r=await fetch(CONFIG.supabaseUrl+'/rest/v1/hub_registry?select=*&order=name.asc',{headers:h});
+    if(!r.ok) throw new Error('Registry fetch '+r.status);
+    var reg=await r.json();
+    CONFIG.hubs=reg.map(function(h){return{id:h.id,name:h.name,table:h.db_table,token:h.token||'',color:'accent',url:h.hub_url||'',inPortfolio:h.in_portfolio!==false};});
+    var tabsEl=document.getElementById('hubNavTabs');
+    if(tabsEl){
+      var html='<span class="hub-tab active">📊 Portfolio</span>';
+      reg.filter(function(h){return h.in_portfolio!==false;}).forEach(function(h){
+        var url=h.hub_url||'#';
+        html+='<a class="hub-tab" href="'+url+'" target="_blank">'+esc(h.name)+'</a>';
+      });
+      tabsEl.innerHTML=html;
+    }
+    var connEl=document.getElementById('connAll');
+    if(connEl){
+      connEl.innerHTML=CONFIG.hubs.filter(function(h){return h.inPortfolio;}).map(function(h){
+        return '<span class="hub-conn" id="conn_'+h.id.replace(/[^a-z0-9]/g,'_')+'">'+esc(h.name)+'</span>';
+      }).join('');
+    }
+  }catch(e){console.warn('Registry load failed:',e);}
+}
+
 async function loadAll(){
   document.getElementById('loadingOverlay').classList.remove('hidden');
   try{
+  await loadRegistry();
   var results=await Promise.allSettled(CONFIG.hubs.map(function(hub){return fetchHub(hub).then(function(rows){return{hub:hub,rows:rows};})}));
   portfolio.hubs={};
   portfolio.all=[];
   results.forEach(function(res,i){
     var hub=CONFIG.hubs[i];
-    var el=document.getElementById('conn'+hub.id.charAt(0).toUpperCase()+hub.id.slice(1));
+    var el=document.getElementById('conn_'+hub.id.replace(/[^a-z0-9]/g,'_'));
     if(res.status==='fulfilled'){
       var rows=res.value.rows.map(function(r){return normalizeRow(r,hub.id);});
       portfolio.hubs[hub.id]=rows;
@@ -445,6 +430,7 @@ async function loadAll(){
 // ── Render everything ──
 function renderAll(){
   renderKpis();
+  renderHubBreakdown();
   renderHeatmap();
   renderOwners();
   renderTypes();
@@ -453,24 +439,41 @@ function renderAll(){
 }
 
 function renderKpis(){
-  const all=portfolio.all;
-  const uled=portfolio.hubs.uled||[];
-  const is=portfolio.hubs.is||[];
+  var all=portfolio.all;
   document.getElementById('pTotal').textContent=all.length;
-  document.getElementById('pTotalSub').textContent=`${uled.length} uLED · ${is.length} IS`;
+  var hubSubs=CONFIG.hubs.filter(function(h){return h.inPortfolio;}).map(function(h){
+    return (portfolio.hubs[h.id]||[]).length+' '+h.name;
+  }).join(' \u00b7 ');
+  document.getElementById('pTotalSub').textContent=hubSubs||'across all hubs';
   document.getElementById('pUrgent').textContent=all.filter(isUrgent).length;
-  document.getElementById('pUrgentSub').textContent=`${uled.filter(isUrgent).length} uLED · ${is.filter(isUrgent).length} IS`;
+  document.getElementById('pUrgentSub').textContent=CONFIG.hubs.filter(function(h){return h.inPortfolio;}).map(function(h){return (portfolio.hubs[h.id]||[]).filter(isUrgent).length+' '+h.name;}).join(' \u00b7 ')||'need immediate attention';
   document.getElementById('pLate').textContent=all.filter(isLate).length;
-  document.getElementById('pLateSub').textContent=`${uled.filter(isLate).length} uLED · ${is.filter(isLate).length} IS`;
+  document.getElementById('pLateSub').textContent=CONFIG.hubs.filter(function(h){return h.inPortfolio;}).map(function(h){return (portfolio.hubs[h.id]||[]).filter(isLate).length+' '+h.name;}).join(' \u00b7 ')||'past due date';
   document.getElementById('pDone').textContent=all.filter(isDone).length;
-  document.getElementById('pDoneSub').textContent=`${uled.filter(isDone).length} uLED · ${is.filter(isDone).length} IS`;
-  document.getElementById('pOwners').textContent=new Set(all.map(r=>r.owner).filter(Boolean)).size;
-  document.getElementById('pUled').textContent=uled.length;
-  document.getElementById('pIs').textContent=is.length;
-  // Hub stat cards
-  const hd=(id,t,u,l,d)=>{document.getElementById(id+'-total').textContent=t;document.getElementById(id+'-urgent').textContent=u;document.getElementById(id+'-late').textContent=l;document.getElementById(id+'-done').textContent=d;};
-  hd('us',uled.length,uled.filter(isUrgent).length,uled.filter(isLate).length,uled.filter(isDone).length);
-  hd('is',is.length,is.filter(isUrgent).length,is.filter(isLate).length,is.filter(isDone).length);
+  document.getElementById('pDoneSub').textContent=CONFIG.hubs.filter(function(h){return h.inPortfolio;}).map(function(h){return (portfolio.hubs[h.id]||[]).filter(isDone).length+' '+h.name;}).join(' \u00b7 ')||'completed';
+  document.getElementById('pOwners').textContent=new Set(all.map(function(r){return r.owner;}).filter(Boolean)).size;
+  var hubKpiEl=document.getElementById('hubKpiCards');
+  if(hubKpiEl){
+    var colors=['var(--uled)','var(--is)','var(--teal)','var(--violet)','var(--amber)','var(--accent)'];
+    hubKpiEl.innerHTML=CONFIG.hubs.filter(function(h){return h.inPortfolio;}).map(function(h,i){
+      var count=(portfolio.hubs[h.id]||[]).length;
+      var c=colors[i%colors.length];
+      return '<div class="kpi-card" style="border-top:3px solid '+c+';"><div class="kpi-val" style="color:'+c+';">'+count+'</div><div class="kpi-lbl">'+esc(h.name)+'</div><div class="kpi-sub">actions</div></div>';
+    }).join('');
+  }
+}
+
+
+function renderHubBreakdown(){
+  var el=document.getElementById('hubBreakdown');
+  if(!el) return;
+  var colors=['var(--uled)','var(--is)','var(--teal)','var(--violet)','var(--amber)','var(--accent)'];
+  el.innerHTML=CONFIG.hubs.filter(function(h){return h.inPortfolio;}).map(function(h,i){
+    var rows=portfolio.hubs[h.id]||[];
+    var c=colors[i%colors.length];
+    var url=h.url||'#';
+    return '<div class="hub-card"><div class="hub-card-head"><span class="hub-name" style="color:'+c+';">'+esc(h.name)+'</span><a href="'+url+'" target="_blank" style="font-size:11px;color:'+c+';text-decoration:none;">Open Hub \u2192</a></div><div class="hub-stats"><div class="hub-stat"><div class="sv" style="color:var(--accent)">'+rows.length+'</div><div class="sl">Total</div></div><div class="hub-stat"><div class="sv" style="color:var(--red)">'+rows.filter(isUrgent).length+'</div><div class="sl">Urgent</div></div><div class="hub-stat"><div class="sv" style="color:var(--amber)">'+rows.filter(isLate).length+'</div><div class="sl">Late</div></div><div class="hub-stat"><div class="sv" style="color:var(--green)">'+rows.filter(isDone).length+'</div><div class="sl">Done</div></div></div></div>';
+  }).join('');
 }
 
 function renderHeatmap(){
@@ -548,20 +551,14 @@ function renderStatus(){
 }
 
 function renderAttention(){
-  const overdue=portfolio.all.filter(r=>r.status==='Overdue').sort((a,b)=>{if(!a.due)return 1;if(!b.due)return-1;return new Date(a.due)-new Date(b.due);}).slice(0,8);
-  const urgent=portfolio.all.filter(r=>isUrgent(r)&&!isDone(r)).sort((a,b)=>{if(!a.due)return 1;if(!b.due)return-1;return new Date(a.due)-new Date(b.due);}).slice(0,8);
-  const hubUrls={
-    uled:'https://xujeffersoninusa.github.io/uLED/?access=jeffersonxuinteradyne',
-    is:'https://xujeffersoninusa.github.io/ImageSensor/?access=imgsensorteradyne2026',
-  };
-  const hubLabel=r=>`<span class="pill ${r._hub==='uled'?'pill-blue':'pill-violet'}">${r._hub==='uled'?'uLED':'IS'}</span>`;
-  const card=(items,emptyMsg)=>items.length?items.map(r=>`
-    <div class="act-item ${r.status.toLowerCase().replace(/ /g,'')}">
-      <div class="act-title">${hubLabel(r)} <a class="act-link" href="${hubUrls[r._hub]}&openAction=${encodeURIComponent(r.id)}" target="_blank">${esc(r.title)}</a></div>
-      <div class="act-meta">${esc(r.account)} · ${esc(r.owner||'Unassigned')} · Due: ${fmtDate(r.due)}</div>
-    </div>`).join(''):`<div style="color:var(--muted);font-size:13px;text-align:center;padding:16px;">${emptyMsg}</div>`;
-  document.getElementById('overdueList').innerHTML=card(overdue,'No overdue actions ✓');
-  document.getElementById('urgentList').innerHTML=card(urgent,'No urgent open actions ✓');
+  var overdue=portfolio.all.filter(function(r){return r.status==='Overdue';}).sort(function(a,b){if(!a.due)return 1;if(!b.due)return-1;return new Date(a.due)-new Date(b.due);}).slice(0,8);
+  var urgent=portfolio.all.filter(function(r){return isUrgent(r)&&!isDone(r);}).sort(function(a,b){if(!a.due)return 1;if(!b.due)return-1;return new Date(a.due)-new Date(b.due);}).slice(0,8);
+  var hubUrls={};CONFIG.hubs.forEach(function(h){hubUrls[h.id]=h.url||'#';});
+  var hubNames={};CONFIG.hubs.forEach(function(h){hubNames[h.id]=h.name;});
+  var hubLabel=function(r){return '<span class="pill pill-blue">'+esc(hubNames[r._hub]||r._hub)+'</span>';};
+  var card=function(items,emptyMsg){return items.length?items.map(function(r){var baseUrl=hubUrls[r._hub]||'#';var sep=baseUrl.indexOf('?')>-1?'&':'?';return '<div class="act-item '+r.status.toLowerCase().replace(/ /g,'')+'"><div class="act-title">'+hubLabel(r)+' <a class="act-link" href="'+baseUrl+sep+'openAction='+encodeURIComponent(r.id)+'" target="_blank">'+esc(r.title)+'</a></div><div class="act-meta">'+esc(r.account)+' \u00b7 '+esc(r.owner||'Unassigned')+' \u00b7 Due: '+fmtDate(r.due)+'</div></div>';}).join(''):'<div style="color:var(--muted);font-size:13px;text-align:center;padding:16px;">'+emptyMsg+'</div>';};
+  document.getElementById('overdueList').innerHTML=card(overdue,'No overdue actions \u2713');
+  document.getElementById('urgentList').innerHTML=card(urgent,'No urgent open actions \u2713');
 }
 
 // ── AI Agent ──
@@ -581,12 +578,10 @@ async function sendAI(){
   addAiMsg('user',msg);
   const loadEl=addAiMsg('assistant','⏳ Analyzing portfolio…','loading');
   const all=portfolio.all;
-  const uled=portfolio.hubs.uled||[];
-  const is=portfolio.hubs.is||[];
+  
   const dataCtx=JSON.stringify({
     summary:{total:all.length,urgent:all.filter(isUrgent).length,overdue:all.filter(r=>r.status==='Overdue').length,done:all.filter(isDone).length,owners:new Set(all.map(r=>r.owner).filter(Boolean)).size},
-    uled_hub:{total:uled.length,urgent:uled.filter(isUrgent).length,overdue:uled.filter(r=>r.status==='Overdue').length,done:uled.filter(isDone).length},
-    imgsensor_hub:{total:is.length,urgent:is.filter(isUrgent).length,overdue:is.filter(r=>r.status==='Overdue').length,done:is.filter(isDone).length},
+    hub_summaries:(function(){var hs={};CONFIG.hubs.forEach(function(h){var rows=portfolio.hubs[h.id]||[];hs[h.name]={total:rows.length,urgent:rows.filter(isUrgent).length,overdue:rows.filter(function(r){return r.status==='Overdue';}).length,done:rows.filter(isDone).length};});return hs;})(),
     all_actions:all.map(r=>({hub:r._hub,title:r.title,account:r.account,type:r.type,priority:r.priority,status:r.status,due:r.due,owner:r.owner,engineering_lead:r.engineering_lead||''}))
   });
   portfolio.aiHistory.push({role:'user',content:msg});
