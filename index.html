@@ -414,30 +414,38 @@ const isLate=r=>['Late','Overdue','At Risk'].includes(r.status);
 const isDone=r=>['Done','Closed','Completed'].includes(r.status);
 
 // ── Load all hubs ──
+
 async function loadAll(){
   document.getElementById('loadingOverlay').classList.remove('hidden');
+  try{
   const results=await Promise.allSettled(CONFIG.hubs.map(hub=>fetchHub(hub).then(rows=>({hub,rows}))));
   portfolio.hubs={};
   portfolio.all=[];
   results.forEach((res,i)=>{
     const hub=CONFIG.hubs[i];
-    const el=document.getElementById(`conn${hub.id.charAt(0).toUpperCase()+hub.id.slice(1)}`);
+    const el=document.getElementById('conn'+hub.id.charAt(0).toUpperCase()+hub.id.slice(1));
     if(res.status==='fulfilled'){
       const rows=res.value.rows.map(r=>normalizeRow(r,hub.id));
       portfolio.hubs[hub.id]=rows;
-      portfolio.all=[...portfolio.all,...rows];
+      portfolio.all=portfolio.all.concat(rows);
       if(el){el.textContent=hub.name;el.className='hub-conn ok';}
     } else {
       portfolio.hubs[hub.id]=[];
       if(el){el.textContent=hub.name+' ✗';el.className='hub-conn err';}
-      console.error(hub.name,res.reason);
+      console.warn(hub.name,'skipped:',res.reason);
     }
   });
   document.getElementById('lastRefresh').textContent='Updated '+new Date().toLocaleTimeString();
-  document.getElementById('loadingOverlay').classList.add('hidden');
   renderAll();
-  toast(`Loaded ${portfolio.all.length} actions across ${CONFIG.hubs.length} hubs`,'success');
+  toast('Loaded '+portfolio.all.length+' actions across '+CONFIG.hubs.length+' hubs','success');
+  }catch(e){
+    console.error('loadAll error:',e);
+    toast('Load error: '+e.message,'error');
+  }finally{
+    document.getElementById('loadingOverlay').classList.add('hidden');
+  }
 }
+
 
 // ── Render everything ──
 function renderAll(){
