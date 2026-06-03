@@ -212,6 +212,7 @@ button{appearance:none;border:none;cursor:pointer;border-radius:8px;padding:7px 
 @media(max-width:1100px){.two-col,.three-col,.hub-row{grid-template-columns:1fr;}.kpi-grid{grid-template-columns:repeat(4,1fr);}}
 @media(max-width:700px){.kpi-grid{grid-template-columns:1fr 1fr;}.hub-stats{grid-template-columns:1fr 1fr;}}
 </style>
+<style>#hubDropMenu a:hover{background:#1e293b !important;color:#fff !important;}#hubDropMenu::-webkit-scrollbar{width:4px;}#hubDropMenu::-webkit-scrollbar-thumb{background:#444;border-radius:2px;}</style>
 </head>
 <body class="sec-pending">
 <div id="loadingOverlay"><div class="spinner"></div><div class="loading-text" id="loadingText">Loading portfolio data…</div></div>
@@ -380,10 +381,16 @@ async function loadRegistry(){
     var tabsEl=document.getElementById('hubNavTabs');
     if(tabsEl){
       var html='<span class="hub-tab active">📊 Portfolio</span>';
-      reg.filter(function(h){return h.in_portfolio!==false;}).forEach(function(h){
+      var activeHubs=reg.filter(function(h){return h.in_portfolio!==false;});
+      html+='<div style="position:relative;display:inline-block;" id="hubDropWrap">';
+      html+='<button class="hub-tab" onclick="var m=document.getElementById(\'hubDropMenu\');m.style.display=m.style.display===\'block\'?\'none\':\'block\'" style="cursor:pointer;border:none;background:inherit;color:inherit;font:inherit;padding:inherit;">\uD83D\uDCCB Hubs ('+activeHubs.length+') \u25BE</button>';
+      html+='<div id="hubDropMenu" style="display:none;position:absolute;top:100%;left:0;background:#0f172a;border:1px solid #334155;border-radius:8px;padding:4px 0;min-width:220px;max-height:400px;overflow-y:auto;z-index:9999;box-shadow:0 8px 24px rgba(0,0,0,0.5);">';
+      activeHubs.forEach(function(h){
         var url=h.hub_url||'#';
-        html+='<a class="hub-tab" href="'+url+'" target="_blank">'+esc(h.name)+'</a>';
+        html+='<a href="'+url+'" target="_blank" style="display:block;padding:6px 14px;color:#94a3b8;text-decoration:none;font-size:12px;white-space:nowrap;">'+esc(h.name)+'</a>';
       });
+      html+='</div></div>';
+      html+='<a class="hub-tab" href="https://xujeffersoninusa.github.io/Agent-Studio/?access=jeffersonxuinteradyne" target="_blank">\uD83E\uDD16 Agent Studio</a>';
       tabsEl.innerHTML=html;
     }
     var connEl=document.getElementById('connAll');
@@ -602,6 +609,8 @@ document.getElementById('btnReload').onclick=loadAll;
 document.getElementById('btnAiToggle').onclick=toggleAI;
 document.addEventListener('keydown',e=>{if(e.key==='Escape')document.getElementById('aiPanel').classList.remove('open');});
 document.addEventListener('DOMContentLoaded',loadAll);
+
+document.addEventListener('click',function(e){var w=document.getElementById('hubDropWrap');var m=document.getElementById('hubDropMenu');if(w&&m&&!w.contains(e.target))m.style.display='none';});
 </script>
 </body>
 </html>
