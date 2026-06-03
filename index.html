@@ -373,7 +373,7 @@ const isDone=r=>['Done','Closed','Completed'].includes(r.status);
 async function loadRegistry(){
   var h={'Content-Type':'application/json','apikey':CONFIG.supabaseKey,'Authorization':'Bearer '+CONFIG.supabaseKey};
   try{
-    var r=await fetch(CONFIG.supabaseUrl+'/rest/v1/hub_registry?select=*&order=name.asc',{headers:h});
+    var r=await fetch(CONFIG.supabaseUrl+'/rest/v1/hub_registry?select=*&status=neq.archived&order=name.asc',{headers:h});
     if(!r.ok) throw new Error('Registry fetch '+r.status);
     var reg=await r.json();
     CONFIG.hubs=reg.map(function(h){return{id:h.id,name:h.name,table:h.db_table,token:h.token||'',color:'accent',url:h.hub_url||'',inPortfolio:h.in_portfolio!==false};});
